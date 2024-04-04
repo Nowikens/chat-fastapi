@@ -1,2 +1,5 @@
 TODO.md
 .vscode
+pEnv
+.env
+*__pycache__
