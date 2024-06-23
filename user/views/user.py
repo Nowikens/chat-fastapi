@@ -1,3 +1,5 @@
+import re
+
 from fastapi import Depends, HTTPException
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
@@ -10,8 +12,39 @@ from user.routers import router
 from user.schemas import UserCreate, UserLogin, UserResponse
 
 
+def validate_password(password: str) -> bool:
+    """Cheks if password is strong enough
+    """
+    if len(password) < 8:
+        raise HTTPException(
+            status_code=400,
+            detail="Password must be at least 8 characters long"
+        )
+    if not re.search(r"[A-Z]", password):
+        raise HTTPException(
+            status_code=400,
+            detail="Password must contain at least one uppercase letter"
+        )
+    if not re.search(r"[a-z]", password):
+        raise HTTPException(
+            status_code=400,
+            detail="Password must contain at least one lowercase letter"
+        )
+    if not re.search(r"[0-9]", password):
+        raise HTTPException(
+            status_code=400,
+            detail="Password must contain at least one digit"
+        )
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        raise HTTPException(
+            status_code=400,
+            detail="Password must contain at least one special character"
+        )
+    return True
+
+
 def validate_new_user(user: UserCreate, db: Session = Depends(get_db)) -> bool:
-    """Validates new user's data -O if login and/or email is not taken
+    """Validates new user's data.
     """
     db_user = db.query(UserModel).filter(
         or_(
@@ -24,7 +57,7 @@ def validate_new_user(user: UserCreate, db: Session = Depends(get_db)) -> bool:
             status_code=400,
             detail="username or email taken"
         )
-    return
+    return validate_password(user.password)
 
 
 @router.post("/user/", response_model=UserResponse)
