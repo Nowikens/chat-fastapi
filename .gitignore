@@ -3,3 +3,4 @@ TODO.md
 pEnv
 .env
 *__pycache__
+alembic/versions

@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from sql.database import BaseModel
+from sql import BaseModel
 
 
 class User(BaseModel):
@@ -22,8 +22,8 @@ class User(BaseModel):
         Boolean,
         default=True
     )
-    nickname: Mapped[str] = mapped_column(
+    username: Mapped[str] = mapped_column(
         String,
         nullable=False,
-        comment="User's nickname to be used in chat"
+        comment="User's username to be used in chat"
     )

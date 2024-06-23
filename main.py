@@ -1,15 +1,10 @@
-from functools import lru_cache
 
 from fastapi import FastAPI
 
-from settings import Settings
+from user.views import router as user_router
 
 app = FastAPI()
-
-
-@lru_cache
-def get_settings():
-    return Settings()
+app.include_router(user_router)
 
 
 @app.get("/")
