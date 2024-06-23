@@ -10,7 +10,6 @@ class User(BaseModel):
     email: Mapped[str] = mapped_column(
         String,
         unique=True,
-        index=True,
         comment="Email is used as login"
     )
     password: Mapped[str] = mapped_column(
