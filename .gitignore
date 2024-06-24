@@ -4,3 +4,4 @@ pEnv
 .env
 *__pycache__
 alembic/versions
+ignored/
