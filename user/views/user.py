@@ -5,11 +5,11 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from sql import get_db
-from user.auth import authenticate_user
 from user.db import insert_user
 from user.models import User as UserModel
 from user.routers import router
 from user.schemas import UserCreate, UserLogin, UserResponse
+from user.utils.auth import authenticate_user
 
 
 def validate_password(password: str) -> bool:
@@ -72,4 +72,7 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)):
 async def login_user(user: UserLogin, db: Session = Depends(get_db)):
     """User login
     """
-    return authenticate_user(user, db)
+    if not authenticate_user(user, db):
+        raise HTTPException(
+            status_code=401
+        )

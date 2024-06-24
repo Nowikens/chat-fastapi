@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 from sql import get_db
 from user.models import User
-from user.password import verify_password
 from user.schemas import UserLogin
+from user.utils.password import verify_password
 
 
 def authenticate_user(user: UserLogin, db: Session = Depends(get_db)) -> bool:
@@ -14,11 +14,7 @@ def authenticate_user(user: UserLogin, db: Session = Depends(get_db)) -> bool:
         User.email == user.email
     ).first()
     if not db_user:
-        raise HTTPException(
-            status_code=401
-        )
+        return False
     if not verify_password(user.password, db_user.password):
-        raise HTTPException(
-            status_code=401
-        )
+        return False
     return True
