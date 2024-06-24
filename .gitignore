@@ -1,6 +1,5 @@
 TODO.md
 .vscode
-pEnv
 .env
 *__pycache__
 alembic/versions
