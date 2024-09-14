@@ -14,6 +14,13 @@ class IpythonAutoImporter:
     # message that's displayed when entering Ipython
     banner = 'Additional imports:\n'
 
+    def import_app(self, app_module: str):
+        """Auto imports FastApi app object. This should be run first,
+        otherwise models won't properly import.
+        """
+        globals()["app"] = getattr(import_module(app_module), "app")
+        self.banner = f'{self.banner}from {app_module} import app\n'
+
     def import_models(self):
         """Auto imports all models that uses Base.
 
@@ -36,8 +43,7 @@ class IpythonAutoImporter:
         other_imports = [
             # schema:
             # module, what's imported
-            ("main", "app"),  # this essentialy gives: from main import app
-            ("sql", "get_db")
+            ("sql", "get_db")  # this essentialy gives: from sql import get_db
         ]
 
         for imp in other_imports:
@@ -49,6 +55,7 @@ class IpythonAutoImporter:
 
 
 auto_importer = IpythonAutoImporter()
+auto_importer.import_app("main")
 auto_importer.import_models()
 auto_importer.import_others()
 
